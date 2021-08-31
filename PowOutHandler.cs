@@ -51,30 +51,12 @@ namespace PowOut
                 r.TurnOffLights(duration);               
             }
 
-            if (Config.PowOutUnlockAllDoors)
-            {
-                List<DoorVariant> doors = Map.Doors.ToList();
-                foreach (DoorVariant d in doors)
-                {
-                    d.ServerChangeLock(DoorLockReason.AdminCommand, true);
-                }
-            }
-
             if (Config.PowOutCassie == true)//Config.PowOutCassie)
             {
                 string cast = Config.PowOutMsg;
                 Cassie.Message(cast);
             }
             yield return Timing.WaitForSeconds(duration);
-
-            if (Config.PowOutUnlockAllDoors)
-            {
-                List<DoorVariant> doors = Map.Doors.ToList();
-                foreach (DoorVariant d in doors)
-                {
-                    d.ServerChangeLock(DoorLockReason.AdminCommand, true);
-                }
-            }
 
             Timing.RunCoroutine(Blackout(), "powerInterval");
         }
