@@ -5,6 +5,7 @@ using Exiled.API.Features;
 using UnityEngine;
 using MEC;
 using ServerEvent = Exiled.Events.Handlers.Server;
+using Player = Exiled.Events.Handlers.Player;
 
 namespace PowOut
 {
@@ -13,6 +14,7 @@ namespace PowOut
         public static PowOut Singleton = new PowOut();
 
         private PowOutHandler powOutHandler;
+        private UnstuckHandler unstucker;
 
         private PowOut()
         {
@@ -31,15 +33,7 @@ namespace PowOut
         public override void OnEnabled()
         {
             Singleton = this;
-            powOutHandler = new PowOutHandler();
-            ServerEvent.RoundStarted += powOutHandler.OnRoundStart;
-
-            Log.Info($"Config entry 'PowOutCassie' success, fetched: {Config.PowOutCassie}");
-            Log.Info($"Config entry 'PowOutMsg' success, fetched: {Config.PowOutMsg}");
-            Log.Info($"Config entry 'PowOutMinRng' success, fetched: {Config.PowOutMinRng}");
-            Log.Info($"Config entry 'PowOutMaxRng' success, fetched: {Config.PowOutMaxRng}");
-            Log.Info($"Config entry 'PowOutFreqMinRng' success, fetched: {Config.PowOutFreqMinRng}");
-            Log.Info($"Config entry 'PowOutFreqMaxRng' success, fetched: {Config.PowOutFreqMaxRng}");
+            RegisterEvents();
 
             base.OnEnabled();
         }
@@ -57,8 +51,14 @@ namespace PowOut
         private void RegisterEvents()
         {
             powOutHandler = new PowOutHandler();
+            unstucker = new UnstuckHandler();
             ServerEvent.RoundStarted += powOutHandler.OnRoundStart;
-
+            ServerEvent.RoundStarted += unstucker.OnRoundStart;
+            ServerEvent.RoundEnded += powOutHandler.OnRoundEnded;
+            ServerEvent.RoundEnded += unstucker.OnRoundEnded;
+            ServerEvent.RestartingRound += powOutHandler.OnRoundRestart;
+            ServerEvent.RestartingRound += unstucker.OnRoundRestart;
+            Player.InteractingDoor += unstucker.InteractingDoor;
         }
 
         /// <summary>
@@ -66,9 +66,15 @@ namespace PowOut
         /// </summary>
         private void UnregisterEvents()
         {
+            powOutHandler = null;
+            unstucker = null;
             ServerEvent.RoundStarted -= powOutHandler.OnRoundStart;
-            Singleton = null;
-            powOutHandler = null;         
+            ServerEvent.RoundStarted -= unstucker.OnRoundStart;
+            ServerEvent.RoundEnded -= powOutHandler.OnRoundEnded;
+            ServerEvent.RoundEnded -= unstucker.OnRoundEnded;
+            ServerEvent.RestartingRound -= powOutHandler.OnRoundRestart;
+            ServerEvent.RestartingRound -= unstucker.OnRoundRestart;
+            Player.InteractingDoor -= unstucker.InteractingDoor;
         }
     }
 }

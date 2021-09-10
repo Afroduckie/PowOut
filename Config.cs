@@ -17,7 +17,7 @@ namespace PowOut
     public class Config : IConfig
     {
         /// <inheritdoc/>
-        [Description("Is 'LowPower' plugin enabled?")]
+        [Description("Is 'PowOut' plugin enabled?")]
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
@@ -29,8 +29,26 @@ namespace PowOut
         /// <summary>
         /// Gets String to pass to CASSIE for playing over loudspeakers
         /// </summary>
-        [Description("CASSIE voice line to play at PowOut.")]
-        public string PowOutMsg { get; private set; } = "Error .g1 .g2 .g4 malfunction .g7 .g4 .g3 facility power grid .g6";
+        [Description("CASSIE voice line to play when a blackout occurs.")]
+        public string PowOutMsg { get; private set; } = "Error .g1 .g4 .g3 facility power .g6";
+
+        /// <summary>
+        /// Boolean to enable/disable Blackouts (if plugin enabled either Blackouts or Brownouts must be enabled)
+        /// </summary>
+        [Description("Should Blackout events occur? [Default: True] NOTE: If both blackouts AND brownouts disabled, defaults to Blackout events.")]
+        public bool PowOutDoBlackouts { get; set; } = true;
+
+        /// <summary>
+        /// Boolean config to enable/disable CASSIE broadcasts at PowOut start
+        /// </summary>
+        [Description("Should Brownout events occur? Picks one at random if both enabled. [Default: True]")]
+        public bool PowOutDoBrownouts { get; set; } = true;
+
+        /// <summary>
+        /// Int ratio of blackouts to brownouts, in percent change
+        /// </summary>
+        [Description("Percent chance for a brownout instead of a blackout. [Default: 40, Max 100]")]
+        public int PowOutBrownoutRatio { get; private set; } = 40;
 
         /// <summary>
         /// Int minimum duration of PowOut event
@@ -59,7 +77,31 @@ namespace PowOut
         /// <summary>
         /// Boolean config to enable/disable CASSIE broadcasts at PowOut start
         /// </summary>
-        [Description("Should a power outage open all doors? [Default: True]")]
-        public bool PowOutUnlockAllDoors { get; set; } = true;
+        [Description("Should a power outage open doors? [Default: True]")]
+        public bool PowOutDoorControl { get; set; } = true;
+
+        /// <summary>
+        /// List of doors to be excluded from PowOut's door control
+        /// </summary>
+        [Description("Doors to EXCLUDE from the plugin's door controls. Use either Exiled Discord (#resources) or the in-game Remote Admin (Door Management) to find room names.")]
+        public List<string> PowOutDoorBlacklist { get; private set; } = new List<string>() { "CHECKPOINT_EZ_HCZ", "CHECKPOINT_LCZ_A", "CHECKPOINT_LCZ_B", "ESCAPE_PRIMARY", "ESCAPE_SECONDARY", "GATE_A", "GATE_B", "SURFACE_NUKE" }; 
+
+        /// <summary>
+        /// Boolean config to enable/disable UNSTUCK routine
+        /// </summary>
+        [Description("Should the sever cause power outages to free stuck SCP players? [Default: True]")]
+        public bool PowOutUnstuck { get; set; } = true;
+
+        /// <summary>
+        /// Gets String to pass to CASSIE for playing over loudspeakers
+        /// </summary>
+        [Description("Message to broadcast to SCP player being let out. Leave blank if no broadcast is desired.")]
+        public string PowOutUnstuckMsg{ get; private set; } = "SCP-079 has let you out.";
+
+        /// <summary>
+        /// Int ratio of blackouts to brownouts, in percent change
+        /// </summary>
+        [Description("Time SCP player will see the unstuck message. [Default: 8]")]
+        public int PowOutUnstuckMsgTime { get; private set; } = 8;
     }
 }
