@@ -116,6 +116,7 @@ If set to true, enables the door control subroutine for the Blackout Events. If 
   - SURFACE_NUKE
 ```
 If any room name is added to this list, the doors within it will not be affected by DoorControl. By default, I added the checkpoints, gates, and nuke so that a power outage won't be the last hurdle for that single remaining D-Class who managed to speedrun through all the carnage, almost at the bunker. Names valid for this list are listed in the #resources chat in the EXiLED Discord server, but here is a direct link: https://discord.com/channels/656673194693885975/668962626780397569/765647220963409932
+
 Any names NOT in this list just will not work, so make sure you know how to spell. Known issue is that Checkpoint doors still open, even though the blacklist still lets you use the keycard panel normally (as it's supposed to).
 ```
   # Should the sever cause power outages to free stuck SCP players? [Default: True]
