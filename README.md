@@ -1,6 +1,6 @@
 # PowOut - A Highly Configurable EXiLED 3.0+ Plugin for SCP Secret Laboratory
 ------------------------------------------------------------------------------
-###Note: I have not submitted this plugin for official release as of yet, so its only available here. Doubt anyone I don't know will find it, but still. No taking credit.
+### Note: I have not submitted this plugin for official release as of yet, so its only available here. Doubt anyone I don't know will find it, but still. No taking credit. Also, it is EXTREMELY out of date, but hopefully I will fix that soon.
 -------------------------------------------------------------------------------
 ### Current Version- 0.7 PreRelease
 
